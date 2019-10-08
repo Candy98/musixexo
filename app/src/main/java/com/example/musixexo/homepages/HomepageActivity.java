@@ -2,7 +2,6 @@ package com.example.musixexo.homepages;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -35,6 +34,7 @@ public class HomepageActivity extends AppCompatActivity {
     String Animename;
     TextView titleVid;
     DottedProgress dottedProgress;
+    PrettyDialog prettyDialog;
 
 
     @Override
@@ -106,11 +106,13 @@ public class HomepageActivity extends AppCompatActivity {
         imgTitle = findViewById(R.id.imgTitle);
         titleVid = findViewById(R.id.titleVid);
     }
+
     private void IsCompleteChecker(final ParseObject obj) {
         if (Boolean.valueOf(obj.get("iscomplete").toString()) == false) {
-            new PrettyDialog(this)
-
+            prettyDialog = new PrettyDialog(this);
+            prettyDialog
                     .setMessage("Sorry,episodes are not ready yet please try again later")
+                    .setIcon(R.drawable.ic_warning)
                     .addButton(
                             "OK",                    // button text
                             R.color.pdlg_color_white,        // button text color
@@ -120,9 +122,17 @@ public class HomepageActivity extends AppCompatActivity {
                                 public void onClick() {
                                     // Do what you gotta do
                                     startActivity(new Intent(HomepageActivity.this, ViewsList.class));
-                                    HomepageActivity.this.finish();
                                 }
                             }
                     ).show();
+            prettyDialog.setCancelable(false);
         }
-    }}
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        startActivity(new Intent(HomepageActivity.this, ViewsList.class));
+    }
+}

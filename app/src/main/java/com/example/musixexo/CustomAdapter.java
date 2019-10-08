@@ -2,7 +2,6 @@ package com.example.musixexo;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,17 +15,13 @@ import com.bumptech.glide.Glide;
 import com.example.musixexo.models.ModelClass;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 
 
 public class CustomAdapter extends RecyclerView.Adapter {
+    public OnItemLongClickListener mItemLongClickListener;
+    public OnItemClickListener mItemClickListener;
     Context context;
     ArrayList<ModelClass> menuList;
-    public OnItemLongClickListener mItemLongClickListener;
-     public OnItemClickListener mItemClickListener;
-
-
 
 
     public CustomAdapter(Context context, ArrayList<ModelClass> menuList) {
@@ -51,9 +46,9 @@ public class CustomAdapter extends RecyclerView.Adapter {
             final ModelClass name = getItem(position);
             ViewHolder genericViewHolder = (ViewHolder) holder;
 
-           // genericViewHolder.tvName.setText((name.getActivityName()));
+            // genericViewHolder.tvName.setText((name.getActivityName()));
             genericViewHolder.tvName.setText(name.getActivityName());
-            Glide.with(context).load(name.getImgUri()).into(genericViewHolder.imgView);
+            Glide.with(context).load(name.getImgUri()).placeholder(R.drawable.ic_background).into(genericViewHolder.imgView);
         }
     }
 
@@ -95,13 +90,13 @@ public class CustomAdapter extends RecyclerView.Adapter {
 
         TextView tvName;
         ImageView imgView;
-         View rcvLinearLayout;
+        View rcvLinearLayout;
 
         ViewHolder(final View itemView) {
             super(itemView);
 
             this.tvName = itemView.findViewById(R.id.tvList);
-           // this.rcvLinearLayout=itemView.findViewById(R.id.rcvLinLayout);
+            // this.rcvLinearLayout=itemView.findViewById(R.id.rcvLinLayout);
 
             this.imgView = itemView.findViewById(R.id.imgvList);
 

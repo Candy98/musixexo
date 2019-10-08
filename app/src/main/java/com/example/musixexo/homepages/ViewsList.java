@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -34,15 +36,15 @@ import java.util.List;
 public class ViewsList extends AppCompatActivity {
     ImageView imgvListPh;
     ArrayList<ModelClass> activityList = new ArrayList<>();
-    ArrayList<ModelClass> activitylist2 = new ArrayList<>();
     RecyclerView rcvlist;
-    CustomAdapter rcvAdaptor;
+    CustomAdapter rcvAdaptor,rcvAdapter2;
     ModelClass modelClass;
     DottedProgress dottedProgress;
     MenuItem item;
     String[] spinner = {"Anime", "Movies"};
     String searchKey;
     ProgressBar progressBar;
+    ArrayList<ModelClass> allitems=new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +65,7 @@ public class ViewsList extends AppCompatActivity {
                         activityList.add(modelClass);
 
                     }
+                    allitems=activityList;
                     rcvlist.setAdapter(rcvAdaptor);
                     dottedProgress.dismiss();
                 }
@@ -75,6 +78,7 @@ public class ViewsList extends AppCompatActivity {
                 Intent intent = new Intent(ViewsList.this, HomepageActivity.class);
                 intent.putExtra("AnimeName", menulist.get(position).getActivityName());
                 startActivity(intent);
+                ViewsList.this.finish();
             }
         });
 
@@ -99,16 +103,21 @@ public class ViewsList extends AppCompatActivity {
         final Spinner spinner = (Spinner) MenuItemCompat.getActionView(item);
         spinner.setAdapter(adapter);
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
+        final SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         searchView.setIconifiedByDefault(false);
+
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                if (!query.equals(null)) {
+                if (query!=null&&TextUtils.getTrimmedLength(query)>0) {
                     activityList.clear();
                     rcvlist.setAdapter(rcvAdaptor);
                     QueryInParse(query);
+                }else{
+                    rcvAdapter2=new CustomAdapter(ViewsList.this,allitems);
+                    rcvlist.setAdapter(rcvAdapter2);
+                    Log.i("Check","null query");
                 }
                 return true;
             }

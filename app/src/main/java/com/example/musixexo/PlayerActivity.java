@@ -1,6 +1,7 @@
 package com.example.musixexo;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -11,6 +12,7 @@ import android.widget.ProgressBar;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.musixexo.homepages.HomepageActivity;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
 import com.google.android.exoplayer2.ExoPlaybackException;
@@ -238,9 +240,9 @@ public class PlayerActivity extends AppCompatActivity implements Player.EventLis
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        PlayerActivity.this.finish();
         player.stop();
-        Log.i("back", "Pressed");
+        PlayerActivity.this.finish();
+
     }
 
     @SuppressLint("InlinedApi")
