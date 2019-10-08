@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".homepages.HomepageActivity">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/imgTitle"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"></ImageView>
+
+        <TextView
+
+            android:id="@+id/titleVid"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/imgTitle"
+            android:layout_marginLeft="10dp"
+            android:fontFamily="@font/carter_one"
+            android:padding="5dp"
+            android:textColor="#ffffff"
+            android:textSize="25sp"></TextView>
+
+
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Episodes:"
+        android:textSize="20sp"></TextView>
+
+
+    <ListView
+        android:id="@+id/lvEpList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="17dp"
+
+        ></ListView>
+</LinearLayout>

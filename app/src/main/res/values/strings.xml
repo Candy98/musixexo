@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">musixexo</string>
+
+    <string name="title_activity_fullscreen">FullscreenActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="back4app_server_url">https://parseapi.back4app.com/</string>
+
+    <!-- Change the following strings as required -->
+    <string name="back4app_app_id">ZPRNOKz3yh0yxizwwppMicgO8UXlilNyDGCSkTRs</string>
+    <string name="back4app_client_key">awj6Nx5INrSSTW7mz1eWpthJUW30eyDFOkTltOlB</string>
+
+</resources>
