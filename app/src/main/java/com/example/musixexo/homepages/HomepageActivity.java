@@ -2,6 +2,7 @@ package com.example.musixexo.homepages;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -20,6 +21,11 @@ import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import libs.mjn.prettydialog.PrettyDialog;
@@ -35,7 +41,10 @@ public class HomepageActivity extends AppCompatActivity {
     TextView titleVid;
     DottedProgress dottedProgress;
     PrettyDialog prettyDialog;
-
+    JSONArray jsonArray;
+    JSONObject jsonObject;
+    List<JSONObject> jsonObjects = new ArrayList<>();
+    List<String> urls = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +68,7 @@ public class HomepageActivity extends AppCompatActivity {
         // });
 
         dottedProgress.show();
+
         ParseQuery<ParseObject> query = ParseQuery.getQuery("Episodes");
         query.whereEqualTo("name", Animename);
         query.findInBackground(new FindCallback<ParseObject>() {
@@ -69,7 +79,20 @@ public class HomepageActivity extends AppCompatActivity {
 
                     for (ParseObject obj : objects) {
                         episodes = obj.getList("epno");
-                        url = obj.getList("url");
+                        try {
+                            String response = obj.get("urljson") + "";
+                            JSONArray jsonArray = new JSONArray(response);
+
+
+                            for (int i = 0; i < jsonArray.length(); i++) {
+                                jsonObjects.add(jsonArray.getJSONObject(i));
+                            }
+                            for (JSONObject obj1 : jsonObjects) {
+                                urls.add(obj1.get("url").toString());
+                            }
+
+                        } catch (JSONException ex) {
+                        }
                         titleVid.setText(obj.get("name") + "");
                         IsCompleteChecker(obj);
 
@@ -86,7 +109,7 @@ public class HomepageActivity extends AppCompatActivity {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                         Intent intent = new Intent(HomepageActivity.this, PlayerActivity.class);
-                        intent.putExtra("Url", url.get(i).toString());
+                        intent.putExtra("Url", urls.get(i));
                         startActivity(intent);
                     }
                 });
@@ -122,6 +145,7 @@ public class HomepageActivity extends AppCompatActivity {
                                 public void onClick() {
                                     // Do what you gotta do
                                     startActivity(new Intent(HomepageActivity.this, ViewsList.class));
+                                    HomepageActivity.this.finish();
                                 }
                             }
                     ).show();
