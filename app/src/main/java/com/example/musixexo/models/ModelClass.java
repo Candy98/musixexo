@@ -14,12 +14,41 @@ public class ModelClass {
    int activityIcon;
    String activityLocation;
    String desc,dest;
-   String color;
+    String vidDuration;
+    String epUrl;
+    String color;
     Drawable background;
     int resource;
     String imgUrl;
     Uri imgUri;
     Context context;
+    Uri epImgUrl;
+
+    public Uri getEpImgUrl() {
+        return epImgUrl;
+    }
+
+    public void setEpImgUrl(Uri epImgUrl) {
+        this.epImgUrl = epImgUrl;
+    }
+
+    public String getEpUrl() {
+        return epUrl;
+    }
+
+    public void setEpUrl(String epUrl) {
+        this.epUrl = epUrl;
+    }
+
+
+
+    public String getVidDuration() {
+        return vidDuration;
+    }
+
+    public void setVidDuration(String vidDuration) {
+        this.vidDuration = vidDuration;
+    }
 
     public Context getContext() {
         return context;

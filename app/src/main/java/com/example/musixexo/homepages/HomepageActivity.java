@@ -1,21 +1,23 @@
 package com.example.musixexo.homepages;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.musixexo.PlayerActivity;
 import com.example.musixexo.R;
+import com.example.musixexo.adapters.CustomAdapterEpisodeLists;
 import com.example.musixexo.custom.DottedProgress;
+import com.example.musixexo.models.ModelClass;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -42,15 +44,25 @@ public class HomepageActivity extends AppCompatActivity {
     DottedProgress dottedProgress;
     PrettyDialog prettyDialog;
     JSONArray jsonArray;
+    RecyclerView rcvEpList;
+
     JSONObject jsonObject;
     List<JSONObject> jsonObjects = new ArrayList<>();
     List<String> urls = new ArrayList<>();
+    List<String> epList = new ArrayList<>();
+    List<String> durationList = new ArrayList<>();
+    List<String> imgTitleEpList = new ArrayList<>();
+    ArrayList<ModelClass> activityList = new ArrayList<>();
+    CustomAdapterEpisodeLists customAdapterEpisodeLists;
+    ModelClass modelClass;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_homepage);
         BindViews();
+
         dottedProgress = new DottedProgress(HomepageActivity.this);
         Animename = getIntent().getStringExtra("AnimeName");
         // ParseObject parseObject = new ParseObject("Episodes");
@@ -89,10 +101,20 @@ public class HomepageActivity extends AppCompatActivity {
                             }
                             for (JSONObject obj1 : jsonObjects) {
                                 urls.add(obj1.get("url").toString());
+                                modelClass = new ModelClass();
+                                modelClass.setActivityName(obj1.get("title") + "");
+                                modelClass.setVidDuration(obj1.get("duration") + "");
+                                modelClass.setEpImgUrl(Uri.parse(obj1.get("poster") + ""));
+                                activityList.add(modelClass);
+
+
                             }
+                            rcvEpList.setAdapter(customAdapterEpisodeLists);
 
                         } catch (JSONException ex) {
                         }
+
+
                         titleVid.setText(obj.get("name") + "");
                         IsCompleteChecker(obj);
 
@@ -101,33 +123,36 @@ public class HomepageActivity extends AppCompatActivity {
                     }
                     dottedProgress.dismiss();
 
-                    arrayAdapter = new ArrayAdapter<>(HomepageActivity.this, android.R.layout.simple_list_item_1, episodes);
-                    listView.setAdapter(arrayAdapter);
 
                 }
-                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                        Intent intent = new Intent(HomepageActivity.this, PlayerActivity.class);
-                        intent.putExtra("Url", urls.get(i));
-                        startActivity(intent);
-                    }
-                });
+
 
             }
 
         });
+        customAdapterEpisodeLists.setOnItemClickListener(new CustomAdapterEpisodeLists.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position, ArrayList<ModelClass> menulist) {
+                Intent intent;
+                intent = new Intent(HomepageActivity.this, PlayerActivity.class);
+                intent.putExtra("Url", urls.get(position));
+                startActivity(intent);
+            }
+        });
 
     }
+
 
     private void LoadTitleGlideImg(String url) {
         Glide.with(HomepageActivity.this).load(url).centerCrop().into(imgTitle);
     }
 
     private void BindViews() {
-        listView = findViewById(R.id.lvEpList);
         imgTitle = findViewById(R.id.imgTitle);
         titleVid = findViewById(R.id.titleVid);
+        customAdapterEpisodeLists = new CustomAdapterEpisodeLists(this, activityList);
+        rcvEpList = findViewById(R.id.rcvEpList);
+
     }
 
     private void IsCompleteChecker(final ParseObject obj) {

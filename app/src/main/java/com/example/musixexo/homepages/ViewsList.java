@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -37,14 +38,14 @@ public class ViewsList extends AppCompatActivity {
     ImageView imgvListPh;
     ArrayList<ModelClass> activityList = new ArrayList<>();
     RecyclerView rcvlist;
-    CustomAdapter rcvAdaptor,rcvAdapter2;
+    CustomAdapter rcvAdaptor, rcvAdapter2;
     ModelClass modelClass;
     DottedProgress dottedProgress;
     MenuItem item;
     String[] spinner = {"Anime", "Movies"};
     String searchKey;
     ProgressBar progressBar;
-    ArrayList<ModelClass> allitems=new ArrayList<>();
+    ArrayList<ModelClass> allitems = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,25 +54,7 @@ public class ViewsList extends AppCompatActivity {
         BindViews();
         dottedProgress = new DottedProgress(ViewsList.this);
         dottedProgress.show();
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("Episodes");
-        query.findInBackground(new FindCallback<ParseObject>() {
-            @Override
-            public void done(List<ParseObject> objects, ParseException e) {
-                if (e == null) {
-                    for (ParseObject obj : objects) {
-                        modelClass = new ModelClass();
-                        modelClass.setImgUri(Uri.parse(obj.get("thumb") + ""));
-                        modelClass.setActivityName(obj.get("name") + "");
-                        activityList.add(modelClass);
 
-                    }
-                    allitems=activityList;
-                    rcvlist.setAdapter(rcvAdaptor);
-                    dottedProgress.dismiss();
-                }
-
-            }
-        });
         rcvAdaptor.setOnItemClickListener(new CustomAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position, ArrayList<ModelClass> menulist) {
@@ -102,6 +85,29 @@ public class ViewsList extends AppCompatActivity {
         ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, spinner);
         final Spinner spinner = (Spinner) MenuItemCompat.getActionView(item);
         spinner.setAdapter(adapter);
+       spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+           @Override
+           public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+               switch (position) {
+                   case 0:
+                        activityList.clear();
+                       ParseFetchData("anime");
+                       break;
+                   case 1:
+                    activityList.clear();
+                       ParseFetchData("movie");
+                       break;
+                       default:
+                           break;
+
+               }
+           }
+
+           @Override
+           public void onNothingSelected(AdapterView<?> parent) {
+
+           }
+       });
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         final SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
@@ -110,14 +116,14 @@ public class ViewsList extends AppCompatActivity {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                if (query!=null&&TextUtils.getTrimmedLength(query)>0) {
+                if (query != null && TextUtils.getTrimmedLength(query) > 0) {
                     activityList.clear();
                     rcvlist.setAdapter(rcvAdaptor);
                     QueryInParse(query);
-                }else{
-                    rcvAdapter2=new CustomAdapter(ViewsList.this,allitems);
+                } else {
+                    rcvAdapter2 = new CustomAdapter(ViewsList.this, allitems);
                     rcvlist.setAdapter(rcvAdapter2);
-                    Log.i("Check","null query");
+                    Log.i("Check", "null query");
                 }
                 return true;
             }
@@ -128,6 +134,31 @@ public class ViewsList extends AppCompatActivity {
             }
         });
         return true;
+    }
+
+    private void ParseFetchData(String key) {
+        dottedProgress.show();
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Episodes");
+        query.whereEqualTo("cat", key);
+        query.orderByAscending("name");
+        query.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> objects, ParseException e) {
+                if (e == null) {
+                    for (ParseObject obj : objects) {
+                        modelClass = new ModelClass();
+                        modelClass.setImgUri(Uri.parse(obj.get("thumb") + ""));
+                        modelClass.setActivityName(obj.get("name") + "");
+                        activityList.add(modelClass);
+
+                    }
+                    allitems = activityList;
+                    rcvlist.setAdapter(rcvAdaptor);
+                    dottedProgress.dismiss();
+                }
+
+            }
+        });
     }
 
     private void QueryInParse(String query) {

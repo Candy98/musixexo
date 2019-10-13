@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     tools:context=".homepages.HomepageActivity">
 
@@ -35,14 +36,15 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:text="Episodes:"
+        android:padding="15dp"
         android:textSize="20sp"></TextView>
 
 
-    <ListView
-        android:id="@+id/lvEpList"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="17dp"
-
-        ></ListView>
+<androidx.recyclerview.widget.RecyclerView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/rcvEpList"
+    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+    tools:listitem="@layout/rcv_ep_list"
+    ></androidx.recyclerview.widget.RecyclerView>
 </LinearLayout>
