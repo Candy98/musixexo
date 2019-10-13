@@ -13,6 +13,7 @@ import android.widget.ProgressBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.musixexo.homepages.HomepageActivity;
+import com.example.musixexo.homepages.ViewsList;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
 import com.google.android.exoplayer2.ExoPlaybackException;
@@ -42,6 +43,9 @@ import com.htetznaing.xgetter.XGetter;
 
 import java.util.ArrayList;
 
+import libs.mjn.prettydialog.PrettyDialog;
+import libs.mjn.prettydialog.PrettyDialogCallback;
+
 public class PlayerActivity extends AppCompatActivity implements Player.EventListener {
     private static final String TAG = "ExoPlayerActivity";
     private static final String KEY_VIDEO_URI = "https://drive.google.com/open?id=18tEUgWiNNmapjxYx10B9QBI08IQhyoqb";
@@ -54,6 +58,7 @@ public class PlayerActivity extends AppCompatActivity implements Player.EventLis
     String fmUrl;
     Runnable mRunnable;
     ProgressBar exoBuff;
+    PrettyDialog prettyDialog;
 
 
     @Override
@@ -179,6 +184,7 @@ public class PlayerActivity extends AppCompatActivity implements Player.EventLis
                 break;
             case Player.STATE_ENDED:
                 // Activate the force enable
+
                 break;
             case Player.STATE_IDLE:
 
@@ -190,7 +196,6 @@ public class PlayerActivity extends AppCompatActivity implements Player.EventLis
                 break;
             default:
                 // status = PlaybackStatus.IDLE;
-                Log.i("DefaultTest", "IDLE");
                 break;
         }
     }
@@ -207,7 +212,27 @@ public class PlayerActivity extends AppCompatActivity implements Player.EventLis
 
     @Override
     public void onPlayerError(ExoPlaybackException error) {
+        prettyDialog = new PrettyDialog(this);
+        prettyDialog
+                .setMessage(error.getMessage())
+                .setIcon(R.drawable.ic_warning)
+                .addButton(
+                        "OK",                    // button text
+                        R.color.pdlg_color_white,        // button text color
+                        R.color.pdlg_color_green,        // button background color
+                        new PrettyDialogCallback() {        // button OnClick listener
+                            @Override
+                            public void onClick() {
+                                // Do what you gotta do
+                                startActivity(new Intent(PlayerActivity.this,HomepageActivity.class));
+                                player.stop();
+                                PlayerActivity.this.finish();
 
+
+                            }
+                        }
+                ).show();
+        prettyDialog.setCancelable(false);
     }
 
     @Override
@@ -222,6 +247,7 @@ public class PlayerActivity extends AppCompatActivity implements Player.EventLis
 
     @Override
     public void onSeekProcessed() {
+
 
     }
     /*private void hide() {

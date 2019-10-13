@@ -48,7 +48,12 @@ public class CustomAdapter extends RecyclerView.Adapter {
 
             // genericViewHolder.tvName.setText((name.getActivityName()));
             genericViewHolder.tvName.setText(name.getActivityName());
-            Glide.with(context).load(name.getImgUri()).placeholder(R.drawable.ic_background).into(genericViewHolder.imgView);
+            try {
+                Glide.with(context).load(name.getImgUri()).placeholder(R.drawable.ic_background).into(genericViewHolder.imgView);
+
+            }catch (Exception e){
+                Glide.with(context).load(R.drawable.ic_corrupted_image).into(genericViewHolder.imgView);
+            }
         }
     }
 

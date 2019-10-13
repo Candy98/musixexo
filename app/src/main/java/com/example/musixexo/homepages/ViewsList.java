@@ -130,7 +130,10 @@ public class ViewsList extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                return false;
+                activityList.clear();
+                rcvlist.setAdapter(rcvAdaptor);
+                QueryInParse(newText);
+                return true;
             }
         });
         return true;
@@ -178,6 +181,7 @@ public class ViewsList extends AppCompatActivity {
                     progressBar.setVisibility(View.GONE);
                     rcvlist.setAdapter(rcvAdaptor);
                 }
+
             }
         });
 
